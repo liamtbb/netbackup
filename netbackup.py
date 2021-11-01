@@ -126,6 +126,7 @@ hostlist_complete = hostlist_dc1 + hostlist_dc2
 
 # initiate progress bar
 bar = ShadyBar('Processing', max=(len(hostlist_complete)))
+failures = 0
 
 for host in hostlist_complete:
 
@@ -151,6 +152,7 @@ for host in hostlist_complete:
                 #logger.info(net_connect.find_prompt())
         except:
                 logger.info(host + " failed to connect, skipping...")
+                failures = failures + 1
                 continue
 
         output = net_connect.send_command(command)
@@ -161,5 +163,5 @@ for host in hostlist_complete:
 
 bar.finish()
 
-# calculate and output run time
-logger.info("Task completed in %.2f minutes!" % ((time.time() - start_time)/60))
+# calculate and output run time and errors
+logger.info("Task completed in {:.2f} minutes with {} error(s).".format(((time.time() - start_time)/60), failures))
